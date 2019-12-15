@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class HeartbeatApplication
 
 fun main(args: Array<String>) {
-	runApplication<HeartbeatApplication>(*args)
+	val context = runApplication<HeartbeatApplication>(*args)
 }

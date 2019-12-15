@@ -1,5 +1,8 @@
 .gradle
 /build/
+/log
+/rules
+
 
 # Ignore Gradle GUI config
 gradle-app.setting
