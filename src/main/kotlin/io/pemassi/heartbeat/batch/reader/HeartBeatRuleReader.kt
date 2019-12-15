@@ -24,24 +24,6 @@ class HeartBeatRuleReader(
 
     init
     {
-//        val testHeartBeatRule = HeartBeatRule(
-//                name = "Test Rule",
-//                description = "This is test rule.",
-//                test = TestRule(
-//                        method = TestMethod.PING,
-//                        ip = "127.0.0.0",
-//                        timeout = 1000
-//                ),
-//                alert = AlertRule(
-//                        method = AlertMethod.Telegram,
-//                        botId = "879307233:AAFMWvH4FuzwyPr5c9lZsqraibN7-M7Cphk",
-//                        chatId = -318415218
-//                )
-//        )
-//
-//        queue.add(testHeartBeatRule)
-
-
         run {
             val folder = File(ruleConfiguration.location)
 
