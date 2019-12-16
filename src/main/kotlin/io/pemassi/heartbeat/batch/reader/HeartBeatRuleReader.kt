@@ -7,12 +7,10 @@ import io.pemassi.heartbeat.util.YamlParser
 import org.springframework.batch.item.ItemReader
 import org.springframework.boot.SpringApplication
 import org.springframework.context.ConfigurableApplicationContext
-import org.springframework.stereotype.Component
 import java.io.File
 import java.util.*
 import kotlin.system.exitProcess
 
-@Component
 class HeartBeatRuleReader(
         applicationContext: ConfigurableApplicationContext,
         ruleConfiguration: RuleConfiguration): ItemReader<HeartBeatRule>

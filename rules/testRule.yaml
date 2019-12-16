@@ -1,0 +1,14 @@
+name: "Test Rule"
+description: "This is test rule"
+test:
+  method: "Socket"
+  host: "log.telcuon.com"
+  port: 5601
+  timeout: 5000
+alert:
+  method: "Telegram"
+  botId: "879307233:AAFMWvH4FuzwyPr5c9lZsqraibN7-M7Cphk"
+  chatId: -318415218
+  condition:
+    method: "FailMoreThan"
+    times: 5

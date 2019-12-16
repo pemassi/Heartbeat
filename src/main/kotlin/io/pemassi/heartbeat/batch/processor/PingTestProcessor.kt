@@ -14,12 +14,13 @@ class PingTestProcessor: ItemProcessor<HeartBeatRule, TestResult>
     {
         val ruleName = item.name
         val testRule = item.test
-        val ip = testRule.ip ?: throw IllegalArgumentException("There is no ip address in the rule.")
+        val host = testRule.host ?: throw IllegalArgumentException("There is no host in the rule.")
         val timeout = testRule.timeout
 
-        logger.debug("[$ruleName] Sending Ping Request to $ip")
+        logger.debug("[$ruleName] Sending Ping Request to $host")
 
-        val pingResult = InetAddress.getByName(ip).isReachable(timeout)
+        val pingResult = InetAddress.getByName(host).isReachable(timeout)
+        var alertMessage: String? = null
 
         if (pingResult)
         {
@@ -27,9 +28,17 @@ class PingTestProcessor: ItemProcessor<HeartBeatRule, TestResult>
         }
         else
         {
-            logger.debug("[$ruleName] We can't reach to this host ($ip)")
+            logger.debug("[$ruleName] We can't reach to this host ($host)")
+            alertMessage = """
+                Cannot reach to host. (Timeout in $timeout ms)
+            """.trimIndent()
         }
 
-        return TestResult(pingResult, item)
+        return TestResult(
+                result = pingResult,
+                destinationHost = host,
+                alertMessage = alertMessage,
+                rule = item
+        )
     }
 }

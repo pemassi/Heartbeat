@@ -19,7 +19,8 @@ class TestRuleProcessor: ItemProcessor<HeartBeatRule, TestResult>
 
         return when(method)
         {
-            TestMethod.PING -> PingTestProcessor().process(item)
+            TestMethod.Ping -> PingTestProcessor().process(item)
+            TestMethod.Socket -> SocketTestProcessor().process(item)
 
             else -> throw Exception("Unsupported test method.")
         }

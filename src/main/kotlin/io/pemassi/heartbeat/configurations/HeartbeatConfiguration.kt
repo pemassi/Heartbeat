@@ -7,5 +7,5 @@ import org.springframework.context.annotation.Configuration
 @ConfigurationProperties(prefix = "heartbeat")
 data class HeartbeatConfiguration
 (
-    val duration: Long = 60000
+    val duration: Long = 1000
 )

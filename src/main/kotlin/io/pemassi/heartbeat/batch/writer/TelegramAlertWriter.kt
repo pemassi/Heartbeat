@@ -15,14 +15,39 @@ class TelegramAlertWriter: OneItemWriter<TestResult>
 
         val alertRule = item.rule.alert
         val ruleName = item.rule.name
+
         val botId = alertRule.botId ?: throw IllegalArgumentException("There is no bot id in the rule.")
         val chatId = alertRule.chatId ?: throw IllegalArgumentException("There is no chat id in the rule.")
 
-        val message = """
-            [$ruleName] ALERT
+        val message: String
 
-            Fail to test with method : [${item.rule.test.method}]
-        """.trimIndent()
+        if(item.result)
+        {
+            message = """
+                Heartbeat Recovered Alert
+                [$ruleName] Testing is now succeeding now :)
+    
+                Method      :   ${item.rule.test.method}
+                Departure   :   ${item.departureHost}
+                Destination :   ${item.destinationHost}
+                
+                ${item.alertMessage}
+            """.trimIndent()
+        }
+        else
+        {
+            message = """
+                !! HEARTBEAT ALERT !!
+                [$ruleName] Testing is failing now. 
+    
+                Method      :   ${item.rule.test.method}
+                Departure   :   ${item.departureHost}
+                Destination :   ${item.destinationHost}
+                
+                ${item.alertMessage}
+            """.trimIndent()
+        }
+
 
         val result = client.send(botId, chatId, message).execute().isSuccessful
 

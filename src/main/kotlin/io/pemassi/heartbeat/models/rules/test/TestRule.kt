@@ -4,11 +4,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TestRule(
-    val method: TestMethod,
-    val ip: String? = null,
-    val timeout: Int = 5000,
-    val port: String? = null,
-    val url: String? = null
+        val method: TestMethod,
+        val host: String? = null,
+        val timeout: Int = 5000,
+        val port: Int? = null,
+        val url: String? = null
 )
 {
 
