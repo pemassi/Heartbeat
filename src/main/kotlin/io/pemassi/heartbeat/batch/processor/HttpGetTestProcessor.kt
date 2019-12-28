@@ -4,11 +4,9 @@ import com.telcuon.appcard.restful.extension.getLogger
 import io.pemassi.heartbeat.models.TestResult
 import io.pemassi.heartbeat.models.rules.HeartBeatRule
 import org.springframework.batch.item.ItemProcessor
-import java.net.InetSocketAddress
-import java.net.Socket
 
 
-class SocketTestProcessor: ItemProcessor<HeartBeatRule, TestResult>
+class HttpGetTestProcessor: ItemProcessor<HeartBeatRule, TestResult>
 {
     private val logger by getLogger()
 
@@ -17,29 +15,25 @@ class SocketTestProcessor: ItemProcessor<HeartBeatRule, TestResult>
         val ruleName = item.name
         val testRule = item.test
 
-        val host = testRule.host ?: throw IllegalArgumentException("There is no host in the rule.")
-        val port = testRule.port ?: throw IllegalArgumentException("There is no port number in the rule.")
+        val url = testRule.url ?: throw IllegalArgumentException("There is no URL in the rule.")
         val timeout = testRule.timeout
 
-        logger.debug("[$ruleName] Socket connection test to $host:$port")
+        logger.debug("[$ruleName] HTTP Get test to $url")
 
         var testingResult: Boolean
         var alertMessage: String? = null
 
         try
         {
-            Socket().use {
-                val endPoint = InetSocketAddress(host, port)
-                it.connect(endPoint, timeout)
-            }
+            logger.debug("[$ruleName] Success to connect to $url")
 
-            logger.debug("[$ruleName] Success to connect to $host:$port")
+            TODO("Need to add restful testing here.")
 
             testingResult = true
         }
         catch (e: Exception)
         {
-            logger.error("[$ruleName] Fail to connect to $host:$port.", e)
+            logger.error("[$ruleName] Fail to connect to $url", e)
 
             testingResult = false
             alertMessage = """
@@ -51,7 +45,7 @@ class SocketTestProcessor: ItemProcessor<HeartBeatRule, TestResult>
 
         return TestResult(
                 result = testingResult,
-                destinationHost = "$host:$port",
+                destinationHost = "$url",
                 alertMessage = alertMessage,
                 rule = item
         )

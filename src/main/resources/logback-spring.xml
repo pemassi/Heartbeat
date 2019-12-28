@@ -16,7 +16,7 @@
 		</encoder>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>log/heartbeat_error_%d{yyyy-MM-dd}.log</fileNamePattern>
-			<totalSizeCap>10MB</totalSizeCap>
+			<maxHistory>60</maxHistory>
 		</rollingPolicy>
 	</appender>
 
@@ -26,7 +26,7 @@
 		</encoder>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>log/heartbeat_%d{yyyy-MM-dd}.log</fileNamePattern>
-			<totalSizeCap>10MB</totalSizeCap>
+			<maxHistory>60</maxHistory>
 		</rollingPolicy>
 	</appender>
 

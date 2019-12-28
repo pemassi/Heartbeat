@@ -20,6 +20,7 @@ dependencies {
 
 	//Spring Boot Libraries
 	implementation("org.springframework.boot:spring-boot-starter-batch")
+	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
 	//Kotlin Helper Libraries
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -40,7 +41,7 @@ dependencies {
 	implementation("com.google.code.gson", "gson", "2.8.5")
 
 	//Yaml
-	implementation("org.yaml", "snakeyaml", "1.25")
+	//implementation("org.yaml", "snakeyaml", "1.25")
 	implementation("com.charleskorn.kaml:kaml:0.15.0")
 
 	//Unit Test Libraries

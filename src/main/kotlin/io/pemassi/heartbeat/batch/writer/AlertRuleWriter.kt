@@ -73,6 +73,7 @@ class AlertRuleWriter: ItemWriter<TestResult>
         when(item.rule.alert.method)
         {
             AlertMethod.Telegram -> TelegramAlertWriter().write(item)
+            AlertMethod.Console -> ConsoleAlertWriter().write(item)
 
             else -> throw Exception("Unsupported alert method.")
         }

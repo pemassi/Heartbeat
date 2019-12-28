@@ -10,8 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled
 @EnableScheduling
 class ScheduleConfiguration(
         val jobLauncher: JobLauncher,
-        val batchConfiguration: BatchConfiguration,
-        val heartbeatConfiguration: HeartbeatConfiguration)
+        val batchConfiguration: BatchConfiguration)
 {
 
     @Scheduled(fixedRateString = "#{@heartbeatConfiguration.getDuration()}")

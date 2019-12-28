@@ -34,7 +34,6 @@ class HeartBeatRuleReader(
             if(!folder.isDirectory)
             {
                 logger.error("Rule location(${folder.absolutePath}) is not folder!!")
-                SpringApplication.exit(applicationContext)
                 exitProcess(SpringApplication.exit(applicationContext))
             }
 

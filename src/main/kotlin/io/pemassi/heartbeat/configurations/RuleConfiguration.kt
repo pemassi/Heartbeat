@@ -7,5 +7,5 @@ import org.springframework.context.annotation.Configuration
 @ConfigurationProperties(prefix = "heartbeat.rule")
 data class RuleConfiguration
 (
-    val location: String = "rules"
+    var location: String = "rules"
 )

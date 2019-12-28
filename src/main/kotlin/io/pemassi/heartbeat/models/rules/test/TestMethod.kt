@@ -4,6 +4,5 @@ enum class TestMethod
 {
     Ping,
     Socket,
-    HttpGet,
-    HttpsGet
+    HttpGet
 }
