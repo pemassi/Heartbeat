@@ -1,8 +1,8 @@
 package io.pemassi.heartbeat.batch.processor
 
-import com.telcuon.appcard.restful.extension.getLogger
 import io.pemassi.heartbeat.models.TestResult
 import io.pemassi.heartbeat.models.rules.HeartBeatRule
+import io.pemassi.kotlin.extensions.slf4j.getLogger
 import org.springframework.batch.item.ItemProcessor
 
 

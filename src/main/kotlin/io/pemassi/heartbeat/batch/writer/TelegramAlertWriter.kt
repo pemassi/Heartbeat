@@ -1,6 +1,6 @@
 package io.pemassi.heartbeat.batch.writer
 
-import com.telcuon.appcard.restful.extension.getLogger
+import io.pemassi.kotlin.extensions.slf4j.getLogger
 import io.pemassi.heartbeat.interfaces.TelegramAPI
 import io.pemassi.heartbeat.models.TestResult
 import io.pemassi.heartbeat.util.RestfulClient

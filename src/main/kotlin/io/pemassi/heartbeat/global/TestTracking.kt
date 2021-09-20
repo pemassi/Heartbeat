@@ -1,6 +1,6 @@
 package io.pemassi.heartbeat.global
 
-import com.telcuon.appcard.restful.extension.getLogger
+import io.pemassi.kotlin.extensions.slf4j.getLogger
 
 object TestTracking
 {

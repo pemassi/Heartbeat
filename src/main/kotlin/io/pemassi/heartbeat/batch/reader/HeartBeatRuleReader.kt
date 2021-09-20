@@ -1,6 +1,6 @@
 package io.pemassi.heartbeat.batch.reader
 
-import com.telcuon.appcard.restful.extension.getLogger
+import io.pemassi.kotlin.extensions.slf4j.getLogger
 import io.pemassi.heartbeat.configurations.RuleConfiguration
 import io.pemassi.heartbeat.models.rules.HeartBeatRule
 import io.pemassi.heartbeat.util.YamlParser

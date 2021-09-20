@@ -32,7 +32,7 @@ class BatchConfiguration(
     fun heartBeatStep(): Step
     {
         return stepBuilderFactory.get("heartBeat-searchRules")
-                .chunk<HeartBeatRule, TestResult>(1)
+                .chunk<HeartBeatRule, TestResult>(10)
                 .reader(HeartBeatRuleReader(applicationContext, ruleConfiguration))
                 .processor(TestRuleProcessor())
                 .writer(AlertRuleWriter())
