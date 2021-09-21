@@ -1,0 +1,19 @@
+name: "Example Ping Rule"
+description: "This is example."
+
+cron: "0/5 * * ? * *"
+
+test:
+  ping:
+    host: "localhost"
+    timeout: 1000
+
+condition:
+  failMoreThan:
+    times: 1
+
+alert:
+  title: TEST
+  body: TEST
+  console:
+    debug: true

@@ -1,6 +1,6 @@
 package io.pemassi.heartbeat.util
 
-import com.telcuon.appcard.restful.extension.getLogger
+import io.pemassi.kotlin.extensions.slf4j.getLogger
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
