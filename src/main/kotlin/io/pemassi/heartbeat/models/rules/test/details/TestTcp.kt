@@ -1,25 +1,29 @@
-package io.pemassi.heartbeat.batch.processor
+package io.pemassi.heartbeat.models.rules.test.details
 
-import io.pemassi.kotlin.extensions.slf4j.getLogger
-import io.pemassi.heartbeat.models.TestResult
 import io.pemassi.heartbeat.models.rules.HeartBeatRule
-import org.springframework.batch.item.ItemProcessor
+import io.pemassi.heartbeat.models.rules.test.TestMethod
+import io.pemassi.heartbeat.models.rules.test.TestResult
+import io.pemassi.kotlin.extensions.slf4j.getLogger
+import kotlinx.serialization.Serializable
 import java.net.InetSocketAddress
 import java.net.Socket
 
-
-class SocketTestProcessor: ItemProcessor<HeartBeatRule, TestResult>
+@Serializable
+data class TestTcp(
+    val host: String,
+    val port: Int,
+    val timeout: Int = 5000
+): TestDetail
 {
-    private val logger by getLogger()
+    override val method: TestMethod
+        get() = TestMethod.TCP
 
-    override fun process(item: HeartBeatRule): TestResult
-    {
-        val ruleName = item.name
-        val testRule = item.test
+    override fun validation() {
+        require(port in 0..65535)
+    }
 
-        val host = testRule.host ?: throw IllegalArgumentException("There is no host in the rule.")
-        val port = testRule.port ?: throw IllegalArgumentException("There is no port number in the rule.")
-        val timeout = testRule.timeout
+    override fun doTest(rule: HeartBeatRule): TestResult {
+        val ruleName = rule.name
 
         logger.debug("[$ruleName] Socket connection test to $host:$port")
 
@@ -50,10 +54,16 @@ class SocketTestProcessor: ItemProcessor<HeartBeatRule, TestResult>
         }
 
         return TestResult(
-                result = testingResult,
-                destinationHost = "$host:$port",
-                alertMessage = alertMessage,
-                rule = item
+            result = testingResult,
+            destinationHost = "$host:$port",
+            alertMessage = alertMessage,
+            testedRule = this,
+            rule = rule
         )
+    }
+
+    companion object
+    {
+        private val logger by getLogger()
     }
 }

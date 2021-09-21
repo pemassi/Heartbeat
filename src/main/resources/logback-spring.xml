@@ -52,6 +52,10 @@
 		<appender-ref ref="file" />
 	</logger>
 
+	<logger name="org.quartz" level="TRACE">
+		<appender-ref ref="console" />
+	</logger>
+
 	<logger name="org.springframework" level="INFO">
 		<appender-ref ref="console" />
 		<appender-ref ref="file" />

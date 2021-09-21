@@ -9,6 +9,10 @@ object YamlParser
 {
     fun <T> parse(file: File, clazz: KSerializer<T>): T
     {
-        return Yaml.default.decodeFromStream(clazz, file.inputStream())
+        val stream = file.inputStream()
+
+        return Yaml.default.decodeFromStream(clazz, stream).also {
+            stream.close()
+        }
     }
 }

@@ -33,6 +33,9 @@ dependencies {
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.springframework.boot:spring-boot-starter-aop")
 
+    //Scheduler
+    implementation("org.springframework.boot:spring-boot-starter-quartz")
+
     //Spring Cloud
     implementation("org.springframework.cloud:spring-cloud-starter-sleuth")
 
@@ -64,7 +67,7 @@ dependencies {
 	implementation ("com.squareup.okhttp3:logging-interceptor:4.9.1")
 
 	//Json
-	implementation("com.google.code.gson", "gson", "2.8.5")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0-RC")
 
 	//Yaml
 	//implementation("org.yaml", "snakeyaml", "1.25")
