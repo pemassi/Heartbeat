@@ -19,6 +19,7 @@ data class TestRule(
     fun validation()
     {
         require(rules.isNotEmpty()) { "At least one test rule needs."}
+        require(rules.size == 1) { "Cannot use multiple test rules."}
 
         rules.forEach {
             it.validation()

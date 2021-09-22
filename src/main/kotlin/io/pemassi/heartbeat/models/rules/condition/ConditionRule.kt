@@ -17,6 +17,7 @@ data class ConditionRule
     fun validation()
     {
         require(rules.isNotEmpty()) { "At least one condition rule needs."}
+        require(rules.size == 1) { "Cannot use multiple conditions."}
 
         rules.forEach {
             it.validation()

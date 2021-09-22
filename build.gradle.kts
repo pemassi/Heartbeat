@@ -69,6 +69,9 @@ dependencies {
 	//Json
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0-RC")
 
+	//E-mail
+	implementation("com.sun.mail:javax.mail:1.6.1")
+
 	//Yaml
 	//implementation("org.yaml", "snakeyaml", "1.25")
 	implementation("com.charleskorn.kaml:kaml:0.35.3")
