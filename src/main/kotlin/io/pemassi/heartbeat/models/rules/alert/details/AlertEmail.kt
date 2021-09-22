@@ -1,7 +1,7 @@
 package io.pemassi.heartbeat.models.rules.alert.details
 
 import io.pemassi.heartbeat.models.rules.alert.AlertMethod
-import io.pemassi.heartbeat.models.rules.test.TestResult
+import io.pemassi.heartbeat.models.rules.test.TestLog
 import io.pemassi.kotlin.extensions.slf4j.getLogger
 import kotlinx.serialization.Serializable
 import org.hibernate.validator.constraints.URL
@@ -25,7 +25,7 @@ data class AlertEmail(
     val username: String? = null,
     val password: String? = null,
     val additionalProperties: HashMap<String, String>? = null
-): AlertDetail
+): AlertDetail()
 {
     override val method: AlertMethod
         get() = AlertMethod.Email
@@ -37,15 +37,15 @@ data class AlertEmail(
         require(to.isNotEmpty()) {"At least one recipient is required."}
     }
 
-    override fun reportConditionMet(testResult: TestResult) {
-        report(testResult)
+    override fun reportConditionMet(testLog: TestLog) {
+        report(testLog)
     }
 
-    override fun reportRecovered(testResult: TestResult) {
-        report(testResult)
+    override fun reportRecovered(testLog: TestLog) {
+        report(testLog)
     }
 
-    private fun report(testResult: TestResult)
+    private fun report(testLog: TestLog)
     {
         //Set default properties
         val properties = System.getProperties()
@@ -74,8 +74,8 @@ data class AlertEmail(
         val message = MimeMessage(session)
         message.setFrom(InternetAddress(from))
         message.addRecipients(Message.RecipientType.TO, to.map { InternetAddress(it) }.toTypedArray())
-        message.subject = testResult.buildAlertTitle()
-        message.setText(testResult.buildAlertBody())
+        message.subject = testLog.buildAlertTitle()
+        message.setText(testLog.buildAlertBody())
 
         logger.debug("Try to sending e-mail...")
 

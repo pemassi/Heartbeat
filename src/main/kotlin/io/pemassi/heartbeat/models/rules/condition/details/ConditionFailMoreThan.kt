@@ -8,7 +8,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ConditionFailMoreThan(
     val times: Int
-): ConditionDetail {
+): ConditionDetail()
+{
 
     override val method: ConditionMethod
         get() = ConditionMethod.FailMoreThan

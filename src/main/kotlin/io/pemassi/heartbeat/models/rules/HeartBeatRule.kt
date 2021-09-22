@@ -3,7 +3,7 @@ package io.pemassi.heartbeat.models.rules
 import com.fasterxml.jackson.annotation.JsonIgnore
 import io.pemassi.heartbeat.models.rules.alert.AlertRule
 import io.pemassi.heartbeat.models.rules.condition.ConditionRule
-import io.pemassi.heartbeat.models.rules.test.TestResult
+import io.pemassi.heartbeat.models.rules.test.TestLog
 import io.pemassi.heartbeat.models.rules.test.TestRule
 import kotlinx.serialization.Serializable
 import org.quartz.CronExpression
@@ -40,7 +40,7 @@ data class HeartBeatRule
         alert.validation()
     }
 
-    fun performTest(): List<TestResult>
+    fun performTest(): List<TestLog>
     {
         return test.performTest(this)
     }
@@ -50,13 +50,13 @@ data class HeartBeatRule
         return condition.isMeetCondition(this)
     }
 
-    fun reportConditionMet(testResult: TestResult)
+    fun reportConditionMet(testLog: TestLog)
     {
-        alert.reportConditionMet(testResult)
+        alert.reportConditionMet(testLog)
     }
 
-    fun reportRecovered(testResult: TestResult)
+    fun reportRecovered(testLog: TestLog)
     {
-        alert.reportRecovered(testResult)
+        alert.reportRecovered(testLog)
     }
 }

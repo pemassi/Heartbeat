@@ -1,4 +1,4 @@
-package io.pemassi.heartbeat.quartz.service
+package io.pemassi.heartbeat.service
 
 import io.pemassi.heartbeat.quartz.model.QuartzJobStatus
 import io.pemassi.heartbeat.quartz.model.QuartzJobStatusResponse

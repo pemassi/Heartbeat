@@ -1,8 +1,10 @@
 package io.pemassi.heartbeat.models.rules.test.details
 
 import io.pemassi.heartbeat.models.rules.HeartBeatRule
+import io.pemassi.heartbeat.models.rules.const.HeartbeatConst
+import io.pemassi.heartbeat.models.rules.test.TestLog
 import io.pemassi.heartbeat.models.rules.test.TestMethod
-import io.pemassi.heartbeat.models.rules.test.TestResult
+import io.pemassi.heartbeat.models.rules.test.toTestResult
 import io.pemassi.kotlin.extensions.slf4j.getLogger
 import kotlinx.serialization.Serializable
 import java.net.InetSocketAddress
@@ -13,7 +15,7 @@ data class TestTcp(
     val host: String,
     val port: Int,
     val timeout: Int = 5000
-): TestDetail
+): TestDetail()
 {
     override val method: TestMethod
         get() = TestMethod.TCP
@@ -22,13 +24,13 @@ data class TestTcp(
         require(port in 0..65535)
     }
 
-    override fun doTest(rule: HeartBeatRule): TestResult {
+    override fun doTest(rule: HeartBeatRule): TestLog {
         val ruleName = rule.name
+        val additionalParamMap = HashMap<String, String>()
 
         logger.debug("[$ruleName] Socket connection test to $host:$port")
 
         var testingResult: Boolean
-        var alertMessage: String? = null
 
         try
         {
@@ -46,19 +48,16 @@ data class TestTcp(
             logger.error("[$ruleName] Fail to connect to $host:$port.", e)
 
             testingResult = false
-            alertMessage = """
-                Cannot connect socket.
-                
-                ${e.localizedMessage}
-            """.trimIndent()
+            additionalParamMap[HeartbeatConst.Param.FAIL_MESSAGE] = e.localizedMessage
         }
 
-        return TestResult(
-            result = testingResult,
-            destinationHost = "$host:$port",
-            alertMessage = alertMessage,
-            testedRule = this,
-            rule = rule
+        return TestLog(
+            result = testingResult.toTestResult(),
+            destinationHost = host,
+            destinationPort = port,
+            testDetail = this,
+            rule = rule,
+            additionalParamMap = additionalParamMap,
         )
     }
 

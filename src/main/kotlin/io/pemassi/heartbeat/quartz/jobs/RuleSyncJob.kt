@@ -2,9 +2,15 @@ package io.pemassi.heartbeat.quartz.jobs
 
 import io.pemassi.heartbeat.configurations.HeartbeatConfiguration
 import io.pemassi.heartbeat.configurations.RuleConfiguration
+import io.pemassi.heartbeat.entity.AlertEntity
+import io.pemassi.heartbeat.entity.ConditionEntity
+import io.pemassi.heartbeat.entity.TestEntity
 import io.pemassi.heartbeat.global.SpringContext
 import io.pemassi.heartbeat.models.rules.HeartBeatRule
-import io.pemassi.heartbeat.quartz.service.QuartzService
+import io.pemassi.heartbeat.service.AlertService
+import io.pemassi.heartbeat.service.ConditionService
+import io.pemassi.heartbeat.service.QuartzService
+import io.pemassi.heartbeat.service.TestService
 import io.pemassi.heartbeat.util.YamlParser
 import io.pemassi.kotlin.extensions.slf4j.getLogger
 import org.quartz.*
@@ -13,14 +19,16 @@ import org.springframework.scheduling.quartz.QuartzJobBean
 import java.io.File
 import kotlin.system.exitProcess
 
-class RuleSyncJob : QuartzJobBean()
+class RuleSyncJob(
+    private val ruleConfiguration: RuleConfiguration,
+    private val quartzService: QuartzService,
+    private val testService: TestService,
+    private val conditionService: ConditionService,
+    private val alertService: AlertService,
+) : QuartzJobBean()
 {
     override fun executeInternal(context: JobExecutionContext)
     {
-        //Get all required beans
-        val ruleConfiguration = SpringContext.getBean(RuleConfiguration::class)
-        val quartzService = SpringContext.getBean(QuartzService::class)
-
         //Read Rules
         val rules = ArrayList<HeartBeatRule>()
         val folder = File(ruleConfiguration.location)
@@ -49,7 +57,21 @@ class RuleSyncJob : QuartzJobBean()
         val duplicatedList = rules.groupingBy { it }.eachCount().filter { it.value > 1 }
         if(duplicatedList.isNotEmpty())
         {
-            logger.warn("There is/are duplicated name(s). \n\r $duplicatedList")
+            logger.error("There is/are duplicated name(s). Stop Sync. \n\r $duplicatedList")
+            return
+        }
+
+        //Update database
+        for(rule in rules)
+        {
+            for(test in rule.test.rules)
+                testService.insert(TestEntity.of(test))
+
+            for(condition in rule.condition.rules)
+                conditionService.insert(ConditionEntity.of(condition))
+
+            for(alert in rule.alert.rules)
+                alertService.insert(AlertEntity.of(alert))
         }
 
         //Delete Old Jobs

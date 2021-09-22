@@ -3,10 +3,12 @@ package io.pemassi.heartbeat
 import io.pemassi.heartbeat.configurations.HeartbeatConfiguration
 import io.pemassi.heartbeat.global.SpringContext
 import io.pemassi.heartbeat.quartz.jobs.RuleSyncJob
-import io.pemassi.heartbeat.quartz.service.QuartzService
+import io.pemassi.heartbeat.service.QuartzService
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 
+@EnableJpaAuditing
 @SpringBootApplication
 class HeartbeatApplication
 

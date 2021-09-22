@@ -4,8 +4,14 @@ spring:
   batch.job.enabled: false
   datasource:
     driverClassName: org.h2.Driver
-    url: jdbc:h2:mem:heartbeat
+    url: jdbc:h2:file:./db/heartbeat
   jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: update
     database-platform: org.hibernate.dialect.H2Dialect
   h2:
     console:

@@ -4,7 +4,7 @@ import io.pemassi.heartbeat.models.rules.alert.details.AlertConsole
 import io.pemassi.heartbeat.models.rules.alert.details.AlertDetail
 import io.pemassi.heartbeat.models.rules.alert.details.AlertEmail
 import io.pemassi.heartbeat.models.rules.alert.details.AlertTelegram
-import io.pemassi.heartbeat.models.rules.test.TestResult
+import io.pemassi.heartbeat.models.rules.test.TestLog
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -31,13 +31,13 @@ data class AlertRule(
         }
     }
 
-    fun reportConditionMet(testResult: TestResult)
+    fun reportConditionMet(testLog: TestLog)
     {
-        rules.map { it.reportConditionMet(testResult) }
+        rules.map { it.reportConditionMet(testLog) }
     }
 
-    fun reportRecovered(testResult: TestResult)
+    fun reportRecovered(testLog: TestLog)
     {
-        rules.map { it.reportRecovered(testResult) }
+        rules.map { it.reportRecovered(testLog) }
     }
 }
