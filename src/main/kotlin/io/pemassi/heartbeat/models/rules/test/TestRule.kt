@@ -5,6 +5,7 @@ import io.pemassi.heartbeat.models.rules.const.HeartbeatConst
 import io.pemassi.heartbeat.models.rules.test.details.TestDetail
 import io.pemassi.heartbeat.models.rules.test.details.TestPing
 import io.pemassi.heartbeat.models.rules.test.details.TestTcp
+import io.pemassi.heartbeat.service.TestService
 import io.pemassi.kotlin.extensions.slf4j.getLogger
 import kotlinx.serialization.Serializable
 import kotlin.reflect.jvm.jvmName
@@ -27,14 +28,14 @@ data class TestRule(
         }
     }
 
-    fun performTest(rule: HeartBeatRule): List<TestLog>
+    fun performTest(rule: HeartBeatRule, testService: TestService): List<TestLog>
     {
         return this.rules.map {
             logger.debug("[${rule.name}] Try to test with methods [${it.method}]")
 
             try
             {
-                it.doTest(rule)
+                it.performTest(rule, testService)
             }
             catch (e: Exception)
             {

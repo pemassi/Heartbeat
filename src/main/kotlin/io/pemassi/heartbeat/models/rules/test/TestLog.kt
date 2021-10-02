@@ -2,6 +2,7 @@ package io.pemassi.heartbeat.models.rules.test
 
 import io.pemassi.heartbeat.models.rules.HeartBeatRule
 import io.pemassi.heartbeat.models.rules.test.details.TestDetail
+import io.pemassi.heartbeat.service.AlertService
 import java.net.InetAddress
 
 data class TestLog
@@ -18,14 +19,14 @@ data class TestLog
     val additionalParamMap: HashMap<String, String> = HashMap()
 )
 {
-    fun reportConditionMet()
+    fun reportConditionMet(alertService: AlertService)
     {
-        rule.reportConditionMet(this)
+        rule.reportConditionMet(this, alertService)
     }
 
-    fun reportRecovered()
+    fun reportRecovered(alertService: AlertService)
     {
-        rule.reportRecovered(this)
+        rule.reportRecovered(this, alertService)
     }
 
     fun buildAlertTitle(): String

@@ -5,10 +5,7 @@ import io.pemassi.heartbeat.models.rules.test.details.TestDetail
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.hibernate.Hibernate
-import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 data class TestEntity(
@@ -18,6 +15,7 @@ data class TestEntity(
     @Enumerated(EnumType.STRING)
     val method: TestMethod,
 
+    @Lob
     val detail: String,
 ): BaseTimeEntity() {
 

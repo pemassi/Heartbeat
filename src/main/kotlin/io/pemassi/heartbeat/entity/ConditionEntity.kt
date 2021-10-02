@@ -5,10 +5,7 @@ import io.pemassi.heartbeat.models.rules.condition.details.ConditionDetail
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.hibernate.Hibernate
-import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 data class ConditionEntity(
@@ -18,6 +15,7 @@ data class ConditionEntity(
     @Enumerated(EnumType.STRING)
     val method: ConditionMethod,
 
+    @Lob
     val detail: String,
 ): BaseTimeEntity() {
     override fun equals(other: Any?): Boolean {

@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ConditionRepository: JpaRepository<ConditionEntity, Int> {
+
 }

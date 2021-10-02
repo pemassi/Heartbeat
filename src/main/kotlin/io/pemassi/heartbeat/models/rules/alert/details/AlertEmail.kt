@@ -2,6 +2,7 @@ package io.pemassi.heartbeat.models.rules.alert.details
 
 import io.pemassi.heartbeat.models.rules.alert.AlertMethod
 import io.pemassi.heartbeat.models.rules.test.TestLog
+import io.pemassi.heartbeat.service.AlertService
 import io.pemassi.kotlin.extensions.slf4j.getLogger
 import kotlinx.serialization.Serializable
 import org.hibernate.validator.constraints.URL
@@ -37,15 +38,15 @@ data class AlertEmail(
         require(to.isNotEmpty()) {"At least one recipient is required."}
     }
 
-    override fun reportConditionMet(testLog: TestLog) {
-        report(testLog)
+    override fun reportConditionMet(testLog: TestLog, alertService: AlertService) {
+        report(testLog, alertService)
     }
 
-    override fun reportRecovered(testLog: TestLog) {
-        report(testLog)
+    override fun reportRecovered(testLog: TestLog, alertService: AlertService) {
+        report(testLog, alertService)
     }
 
-    private fun report(testLog: TestLog)
+    private fun report(testLog: TestLog, alertService: AlertService)
     {
         //Set default properties
         val properties = System.getProperties()

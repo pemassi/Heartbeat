@@ -32,6 +32,7 @@ data class TestLogEntity(
 
     val errorMessage: String?,
 
+    @Lob
     val additionalParamMap: String,
 ): BaseTimeEntity() {
     override fun equals(other: Any?): Boolean {

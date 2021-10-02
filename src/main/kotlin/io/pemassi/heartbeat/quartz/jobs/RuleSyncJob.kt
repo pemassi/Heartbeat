@@ -17,6 +17,8 @@ import org.quartz.*
 import org.springframework.boot.SpringApplication
 import org.springframework.scheduling.quartz.QuartzJobBean
 import java.io.File
+import javax.validation.ConstraintViolationException
+import javax.validation.Validator
 import kotlin.system.exitProcess
 
 class RuleSyncJob(
@@ -25,6 +27,7 @@ class RuleSyncJob(
     private val testService: TestService,
     private val conditionService: ConditionService,
     private val alertService: AlertService,
+    private val validator: Validator,
 ) : QuartzJobBean()
 {
     override fun executeInternal(context: JobExecutionContext)
@@ -57,13 +60,30 @@ class RuleSyncJob(
         val duplicatedList = rules.groupingBy { it }.eachCount().filter { it.value > 1 }
         if(duplicatedList.isNotEmpty())
         {
-            logger.error("There is/are duplicated name(s). Stop Sync. \n\r $duplicatedList")
+            logger.error("There is/are duplicated name(s). Skip sync. \n\r $duplicatedList")
             return
         }
 
-        //Update database
         for(rule in rules)
         {
+            //Validation
+            try
+            {
+                //Annotations
+                val violations = validator.validate(rule)
+                if(violations.isNotEmpty())
+                    throw ConstraintViolationException(violations)
+
+                //Additional
+                rule.validation()
+            }
+            catch(e: Exception)
+            {
+                logger.error("Validation error.", e)
+                continue
+            }
+
+            //Update database
             for(test in rule.test.rules)
                 testService.insert(TestEntity.of(test))
 

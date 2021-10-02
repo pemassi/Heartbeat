@@ -3,6 +3,7 @@ package io.pemassi.heartbeat.models.rules.condition
 import io.pemassi.heartbeat.models.rules.HeartBeatRule
 import io.pemassi.heartbeat.models.rules.condition.details.ConditionDetail
 import io.pemassi.heartbeat.models.rules.condition.details.ConditionFailMoreThan
+import io.pemassi.heartbeat.service.ConditionService
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -24,8 +25,8 @@ data class ConditionRule
         }
     }
 
-    fun isMeetCondition(rule: HeartBeatRule): List<Boolean>
+    fun isMeetCondition(rule: HeartBeatRule, conditionService: ConditionService): List<Boolean>
     {
-        return rules.map { it.isMeetCondition(rule) }
+        return rules.map { it.isMeetCondition(rule, conditionService) }
     }
 }

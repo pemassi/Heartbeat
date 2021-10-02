@@ -5,10 +5,7 @@ import io.pemassi.heartbeat.models.rules.alert.details.AlertDetail
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.hibernate.Hibernate
-import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 data class AlertEntity(
@@ -18,6 +15,7 @@ data class AlertEntity(
     @Enumerated(EnumType.STRING)
     val method: AlertMethod,
 
+    @Lob
     val detail: String,
 ): BaseTimeEntity() {
 

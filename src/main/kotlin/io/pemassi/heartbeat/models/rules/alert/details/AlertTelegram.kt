@@ -3,6 +3,7 @@ package io.pemassi.heartbeat.models.rules.alert.details
 import io.pemassi.heartbeat.interfaces.TelegramAPI
 import io.pemassi.heartbeat.models.rules.alert.AlertMethod
 import io.pemassi.heartbeat.models.rules.test.TestLog
+import io.pemassi.heartbeat.service.AlertService
 import io.pemassi.heartbeat.util.RestfulClient
 import io.pemassi.kotlin.extensions.slf4j.getLogger
 import kotlinx.serialization.Serializable
@@ -20,15 +21,15 @@ data class AlertTelegram(
 
     }
 
-    override fun reportConditionMet(testLog: TestLog) {
-        report(testLog)
+    override fun reportConditionMet(testLog: TestLog, alertService: AlertService) {
+        report(testLog, alertService)
     }
 
-    override fun reportRecovered(testLog: TestLog) {
-        report(testLog)
+    override fun reportRecovered(testLog: TestLog, alertService: AlertService) {
+        report(testLog, alertService)
     }
 
-    private fun report(testLog: TestLog)
+    private fun report(testLog: TestLog, alertService: AlertService)
     {
         val client = RestfulClient.create(TelegramAPI::class)
 

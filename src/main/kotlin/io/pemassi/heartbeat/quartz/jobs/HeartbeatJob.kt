@@ -3,11 +3,13 @@ package io.pemassi.heartbeat.quartz.jobs
 import io.pemassi.heartbeat.entity.TestLogEntity
 import io.pemassi.heartbeat.extensions.jobName
 import io.pemassi.heartbeat.extensions.triggerName
-import io.pemassi.heartbeat.global.TestTracking
 import io.pemassi.heartbeat.models.rules.HeartBeatRule
 import io.pemassi.heartbeat.models.rules.test.TestResult
 import io.pemassi.heartbeat.quartz.const.QuartzConst
+import io.pemassi.heartbeat.service.AlertService
+import io.pemassi.heartbeat.service.ConditionService
 import io.pemassi.heartbeat.service.TestLogService
+import io.pemassi.heartbeat.service.TestService
 import io.pemassi.kotlin.extensions.google.globalGson
 import io.pemassi.kotlin.extensions.slf4j.getLogger
 import kotlinx.serialization.encodeToString
@@ -17,6 +19,9 @@ import org.springframework.scheduling.quartz.QuartzJobBean
 
 class HeartbeatJob(
     private val testLogService: TestLogService,
+    private val alertService: AlertService,
+    private val conditionService: ConditionService,
+    private val testService: TestService,
 ) : QuartzJobBean()
 {
 
@@ -36,7 +41,7 @@ class HeartbeatJob(
         logger.debug("[$ruleName] Start to test")
 
         //Test
-        val testResultList = heartBeatRule.performTest()
+        val testResultList = heartBeatRule.performTest(testService)
 
         //Write log
         testLogService.insertAll(testResultList.map { TestLogEntity.of(it) })
@@ -49,25 +54,18 @@ class HeartbeatJob(
                 logger.debug("[$ruleName] Pass")
 
                 //Check this rule was reported, then it means recovered
-                if(TestTracking.isAlerted(ruleName))
-                {
-                    TestTracking.recovered(ruleName)
-                    testResult.reportRecovered()
-                }
+                testResult.reportRecovered(alertService)
             }
             else
             {
                 logger.error("[$ruleName] Fail, try to alert.")
 
-                //Update test tracking.
-                TestTracking.upFailCount(ruleName)
-
                 //Condition Check
-                val isMeetCondition = testResult.rule.isMeetCondition()
+                val isMeetCondition = testResult.rule.isMeetCondition(conditionService)
 
-                if(isMeetCondition.any { !it })
+                if(isMeetCondition.any { it })
                 {
-                    testResult.reportConditionMet()
+                    testResult.reportConditionMet(alertService)
                 }
             }
         }

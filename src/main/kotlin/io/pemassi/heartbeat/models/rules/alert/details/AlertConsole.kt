@@ -2,6 +2,7 @@ package io.pemassi.heartbeat.models.rules.alert.details
 
 import io.pemassi.heartbeat.models.rules.alert.AlertMethod
 import io.pemassi.heartbeat.models.rules.test.TestLog
+import io.pemassi.heartbeat.service.AlertService
 import io.pemassi.kotlin.extensions.slf4j.getLogger
 import kotlinx.serialization.Serializable
 
@@ -17,11 +18,11 @@ data class AlertConsole(
 
     }
 
-    override fun reportConditionMet(testLog: TestLog) {
+    override fun reportConditionMet(testLog: TestLog, alertService: AlertService) {
         report(testLog)
     }
 
-    override fun reportRecovered(testLog: TestLog) {
+    override fun reportRecovered(testLog: TestLog, alertService: AlertService) {
         report(testLog)
     }
 

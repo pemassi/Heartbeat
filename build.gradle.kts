@@ -71,13 +71,13 @@ dependencies {
 	implementation ("com.squareup.okhttp3:logging-interceptor:4.9.1")
 
 	//Json
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0-RC")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
 
 	//E-mail
-	implementation("com.sun.mail:javax.mail:1.6.1")
+	implementation("com.sun.mail:javax.mail:1.6.2")
 
 	//Yaml
-	implementation("com.charleskorn.kaml:kaml:0.35.3")
+	implementation("com.charleskorn.kaml:kaml:0.36.0")
 
 	// mapstruct
 	implementation("org.mapstruct:mapstruct:1.4.2.Final")
