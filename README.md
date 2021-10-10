@@ -2,7 +2,7 @@
 
 ![Gradle CI](https://github.com/pemassi/HeartBeat/actions/workflows/gradle.yml/badge.svg)
 
-Application(Service) Heartbeat Alert
+YAML-based Customizable Monitoring Application
 
 ## This project is still working on
 I am still working on this project.
