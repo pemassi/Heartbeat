@@ -5,9 +5,9 @@ import io.pemassi.heartbeat.models.rules.const.HeartbeatConst
 import io.pemassi.heartbeat.models.rules.test.TestLog
 import io.pemassi.heartbeat.models.rules.test.TestMethod
 import io.pemassi.heartbeat.models.rules.test.toTestResult
-import io.pemassi.heartbeat.service.TestService
 import io.pemassi.kotlin.extensions.slf4j.getLogger
 import kotlinx.serialization.Serializable
+import org.springframework.context.ApplicationContext
 import java.net.InetAddress
 
 @Serializable
@@ -23,7 +23,7 @@ data class TestPing(
         //Nothing
     }
 
-    override fun performTest(rule: HeartBeatRule, testService: TestService): TestLog {
+    override fun performTest(rule: HeartBeatRule, context: ApplicationContext): TestLog {
         val ruleName = rule.name
         val additionalParamMap = HashMap<String, String>()
 

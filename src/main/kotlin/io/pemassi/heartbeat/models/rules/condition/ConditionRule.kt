@@ -3,17 +3,22 @@ package io.pemassi.heartbeat.models.rules.condition
 import io.pemassi.heartbeat.models.rules.HeartBeatRule
 import io.pemassi.heartbeat.models.rules.condition.details.ConditionDetail
 import io.pemassi.heartbeat.models.rules.condition.details.ConditionFailMoreThan
-import io.pemassi.heartbeat.service.ConditionService
+import io.pemassi.heartbeat.models.rules.condition.details.ConditionPercentage
 import kotlinx.serialization.Serializable
+import org.springframework.context.ApplicationContext
 
 @Serializable
 data class ConditionRule
 (
     val failMoreThan: ConditionFailMoreThan? = null,
+    val percentage: ConditionPercentage? = null,
 )
 {
     val rules: List<ConditionDetail>
-        get() = listOfNotNull(failMoreThan)
+        get() = listOfNotNull(
+            failMoreThan,
+            percentage,
+        )
 
     fun validation()
     {
@@ -25,8 +30,8 @@ data class ConditionRule
         }
     }
 
-    fun isMeetCondition(rule: HeartBeatRule, conditionService: ConditionService): List<Boolean>
+    fun isMeetCondition(rule: HeartBeatRule, context: ApplicationContext): List<Boolean>
     {
-        return rules.map { it.isMeetCondition(rule, conditionService) }
+        return rules.map { it.isMeetCondition(rule, context) }
     }
 }

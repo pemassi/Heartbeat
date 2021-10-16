@@ -3,8 +3,8 @@ package io.pemassi.heartbeat.models.rules.test.details
 import io.pemassi.heartbeat.models.rules.HeartBeatRule
 import io.pemassi.heartbeat.models.rules.test.TestLog
 import io.pemassi.heartbeat.models.rules.test.TestMethod
-import io.pemassi.heartbeat.service.TestService
 import kotlinx.serialization.Serializable
+import org.springframework.context.ApplicationContext
 
 @Serializable
 sealed class TestDetail {
@@ -12,5 +12,5 @@ sealed class TestDetail {
 
     abstract fun validation()
 
-    abstract fun performTest(rule: HeartBeatRule, testService: TestService): TestLog
+    abstract fun performTest(rule: HeartBeatRule, context: ApplicationContext): TestLog
 }

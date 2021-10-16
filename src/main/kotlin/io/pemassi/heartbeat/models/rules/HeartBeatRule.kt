@@ -5,12 +5,10 @@ import io.pemassi.heartbeat.models.rules.alert.AlertRule
 import io.pemassi.heartbeat.models.rules.condition.ConditionRule
 import io.pemassi.heartbeat.models.rules.test.TestLog
 import io.pemassi.heartbeat.models.rules.test.TestRule
-import io.pemassi.heartbeat.service.AlertService
-import io.pemassi.heartbeat.service.ConditionService
-import io.pemassi.heartbeat.service.TestService
 import kotlinx.serialization.Serializable
 import org.quartz.CronExpression
 import org.quartz.CronScheduleBuilder
+import org.springframework.context.ApplicationContext
 import javax.validation.constraints.NotBlank
 
 @Serializable
@@ -45,23 +43,23 @@ data class HeartBeatRule
         alert.validation()
     }
 
-    fun performTest(testService: TestService): List<TestLog>
+    fun performTest(context: ApplicationContext): List<TestLog>
     {
-        return test.performTest(this, testService)
+        return test.performTest(this, context)
     }
 
-    fun isMeetCondition(conditionService: ConditionService): List<Boolean>
+    fun isMeetCondition(context: ApplicationContext): List<Boolean>
     {
-        return condition.isMeetCondition(this, conditionService)
+        return condition.isMeetCondition(this, context)
     }
 
-    fun reportConditionMet(testLog: TestLog, alertService: AlertService)
+    fun reportConditionMet(testLog: TestLog, context: ApplicationContext)
     {
-        alert.reportConditionMet(testLog, alertService)
+        alert.reportConditionMet(testLog, context)
     }
 
-    fun reportRecovered(testLog: TestLog, alertService: AlertService)
+    fun reportRecovered(testLog: TestLog, context: ApplicationContext)
     {
-        alert.reportRecovered(testLog, alertService)
+        alert.reportRecovered(testLog, context)
     }
 }

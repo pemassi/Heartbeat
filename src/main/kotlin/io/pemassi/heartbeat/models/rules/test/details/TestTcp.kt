@@ -5,15 +5,17 @@ import io.pemassi.heartbeat.models.rules.const.HeartbeatConst
 import io.pemassi.heartbeat.models.rules.test.TestLog
 import io.pemassi.heartbeat.models.rules.test.TestMethod
 import io.pemassi.heartbeat.models.rules.test.toTestResult
-import io.pemassi.heartbeat.service.TestService
 import io.pemassi.kotlin.extensions.slf4j.getLogger
 import kotlinx.serialization.Serializable
+import org.hibernate.validator.constraints.Range
+import org.springframework.context.ApplicationContext
 import java.net.InetSocketAddress
 import java.net.Socket
 
 @Serializable
 data class TestTcp(
     val host: String,
+    @Range(min = 1, max = 65535)
     val port: Int,
     val timeout: Int = 5000
 ): TestDetail()
@@ -22,10 +24,10 @@ data class TestTcp(
         get() = TestMethod.TCP
 
     override fun validation() {
-        require(port in 0..65535)
+
     }
 
-    override fun performTest(rule: HeartBeatRule, testService: TestService): TestLog {
+    override fun performTest(rule: HeartBeatRule, context: ApplicationContext): TestLog {
         val ruleName = rule.name
         val additionalParamMap = HashMap<String, String>()
 

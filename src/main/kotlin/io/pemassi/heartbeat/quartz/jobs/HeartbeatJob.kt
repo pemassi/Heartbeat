@@ -15,6 +15,7 @@ import io.pemassi.kotlin.extensions.slf4j.getLogger
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.quartz.*
+import org.springframework.context.ApplicationContext
 import org.springframework.scheduling.quartz.QuartzJobBean
 
 class HeartbeatJob(
@@ -22,58 +23,67 @@ class HeartbeatJob(
     private val alertService: AlertService,
     private val conditionService: ConditionService,
     private val testService: TestService,
+    private val applicationContext: ApplicationContext,
 ) : QuartzJobBean()
 {
 
     override fun executeInternal(context: JobExecutionContext) {
-        //Get job information
-        val jobKey = context.jobName
-        val trigger = context.triggerName
-
-        logger.debug("[$jobKey/$trigger] Start to process")
-
-        //Get Job Data
-        val dataJson = context.jobDetail.jobDataMap[QuartzConst.JobData.DATA_CLASS_JSON] as String
-        val heartBeatRule = globalGson.fromJson(dataJson, HeartBeatRule::class.java)
-
-        //Start
-        val ruleName = heartBeatRule.name
-        logger.debug("[$ruleName] Start to test")
-
-        //Test
-        val testResultList = heartBeatRule.performTest(testService)
-
-        //Write log
-        testLogService.insertAll(testResultList.map { TestLogEntity.of(it) })
-
-        //Check Condition and Alert
-        for (testResult in testResultList)
+        try
         {
-            if(testResult.result == TestResult.SUCCESS)
+            //Get job information
+            val jobKey = context.jobName
+            val trigger = context.triggerName
+
+            logger.debug("[$jobKey/$trigger] Start to process")
+
+            //Get Job Data
+            val dataJson = context.jobDetail.jobDataMap[QuartzConst.JobData.DATA_CLASS_JSON] as String
+            val heartBeatRule = globalGson.fromJson(dataJson, HeartBeatRule::class.java)
+
+            //Start
+            val ruleName = heartBeatRule.name
+            logger.debug("[$ruleName] Start to test")
+
+            //Test
+            val testResultList = heartBeatRule.performTest(applicationContext)
+
+            //Write log
+            testLogService.insertAll(testResultList.map { TestLogEntity.of(it) })
+
+            //Check Condition and Alert
+            for (testResult in testResultList)
             {
-                logger.debug("[$ruleName] Pass")
-
-                //Check this rule was reported, then it means recovered
-                testResult.reportRecovered(alertService)
-            }
-            else
-            {
-                logger.error("[$ruleName] Fail, try to alert.")
-
-                //Condition Check
-                val isMeetCondition = testResult.rule.isMeetCondition(conditionService)
-
-                if(isMeetCondition.any { it })
+                if(testResult.result == TestResult.SUCCESS)
                 {
-                    testResult.reportConditionMet(alertService)
+                    logger.debug("[$ruleName] Pass")
+
+                    //Check this rule was reported, then it means recovered
+                    testResult.reportRecovered(applicationContext)
+                }
+                else
+                {
+                    logger.error("[$ruleName] Fail, try to alert.")
+
+                    //Condition Check
+                    val isMeetCondition = testResult.rule.isMeetCondition(applicationContext)
+
+                    if(isMeetCondition.any { it })
+                    {
+                        testResult.reportConditionMet(applicationContext)
+                    }
                 }
             }
+        }
+        catch(e: Exception)
+        {
+            logger.error("There was an exception during monitoring heartbeat.", e)
         }
     }
 
     companion object
     {
         private val logger by getLogger()
+        private val json = Json { encodeDefaults = false }
 
         fun createTrigger(heartBeatRule: HeartBeatRule): Trigger {
             return TriggerBuilder.newTrigger()
@@ -89,7 +99,7 @@ class HeartbeatJob(
                 .storeDurably()
                 .withIdentity(heartBeatRule.jobName,  HeartbeatJob::class.simpleName)
                 .withDescription(heartBeatRule.description)
-                .usingJobData(QuartzConst.JobData.DATA_CLASS_JSON, Json { encodeDefaults = false }.encodeToString(heartBeatRule))
+                .usingJobData(QuartzConst.JobData.DATA_CLASS_JSON, json.encodeToString(heartBeatRule))
                 .build()
         }
     }

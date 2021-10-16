@@ -2,10 +2,11 @@ package io.pemassi.heartbeat.models.rules.alert.details
 
 import io.pemassi.heartbeat.models.rules.alert.AlertMethod
 import io.pemassi.heartbeat.models.rules.test.TestLog
-import io.pemassi.heartbeat.service.AlertService
 import io.pemassi.kotlin.extensions.slf4j.getLogger
 import kotlinx.serialization.Serializable
+import org.hibernate.validator.constraints.Range
 import org.hibernate.validator.constraints.URL
+import org.springframework.context.ApplicationContext
 import javax.mail.*
 import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeMessage
@@ -20,6 +21,7 @@ data class AlertEmail(
     val to: List<String>,
     @URL
     val host: String,
+    @Range(min = 1, max = 65535)
     val port: Int,
     val ssl: Boolean = false,
     val auth: Boolean = false,
@@ -38,15 +40,15 @@ data class AlertEmail(
         require(to.isNotEmpty()) {"At least one recipient is required."}
     }
 
-    override fun reportConditionMet(testLog: TestLog, alertService: AlertService) {
-        report(testLog, alertService)
+    override fun reportConditionMet(testLog: TestLog, context: ApplicationContext) {
+        report(testLog, context)
     }
 
-    override fun reportRecovered(testLog: TestLog, alertService: AlertService) {
-        report(testLog, alertService)
+    override fun reportRecovered(testLog: TestLog, context: ApplicationContext) {
+        report(testLog, context)
     }
 
-    private fun report(testLog: TestLog, alertService: AlertService)
+    private fun report(testLog: TestLog, context: ApplicationContext)
     {
         //Set default properties
         val properties = System.getProperties()

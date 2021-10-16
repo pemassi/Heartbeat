@@ -5,14 +5,17 @@ import io.pemassi.heartbeat.models.rules.alert.details.AlertDetail
 import io.pemassi.heartbeat.models.rules.alert.details.AlertEmail
 import io.pemassi.heartbeat.models.rules.alert.details.AlertTelegram
 import io.pemassi.heartbeat.models.rules.test.TestLog
-import io.pemassi.heartbeat.service.AlertService
 import kotlinx.serialization.Serializable
+import org.springframework.context.ApplicationContext
 
 @Serializable
 data class AlertRule(
     //Contents
     val title: String,
     val body: String,
+
+    //Settings
+    val repeat: Boolean = false,
 
     //Rules
     val console: AlertConsole? = null,
@@ -32,13 +35,13 @@ data class AlertRule(
         }
     }
 
-    fun reportConditionMet(testLog: TestLog, alertService: AlertService)
+    fun reportConditionMet(testLog: TestLog, context: ApplicationContext)
     {
-        rules.map { it.reportConditionMet(testLog, alertService) }
+        rules.map { it.reportConditionMet(testLog, context) }
     }
 
-    fun reportRecovered(testLog: TestLog, alertService: AlertService)
+    fun reportRecovered(testLog: TestLog, context: ApplicationContext)
     {
-        rules.map { it.reportRecovered(testLog, alertService) }
+        rules.map { it.reportRecovered(testLog, context) }
     }
 }

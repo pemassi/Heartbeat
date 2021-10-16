@@ -20,11 +20,14 @@ class QuartzService(
     fun scheduleJob(jobDetail: JobDetail, trigger: Trigger): JobDetail
     {
         if(isJobExists(jobDetail.key))
+        {
+            logger.info("Job is already running, unschedule the job first.")
             unscheduleJob(jobDetail.key)
+        }
 
         val dt = schedulerFactoryBean.scheduler.scheduleJob(jobDetail, trigger)
 
-        logger.debug("Job with jobKey : {} scheduled successfully at date : {}", jobDetail.key, dt)
+        logger.info("Job with jobKey : {} scheduled successfully at date : {}", jobDetail.key, dt)
 
         return jobDetail
     }

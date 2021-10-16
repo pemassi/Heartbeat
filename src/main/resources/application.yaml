@@ -19,3 +19,6 @@ spring:
       settings:
         web-allow-others: false
         trace: false
+
+server:
+  port: 12312

@@ -5,7 +5,6 @@ import io.pemassi.heartbeat.configurations.RuleConfiguration
 import io.pemassi.heartbeat.entity.AlertEntity
 import io.pemassi.heartbeat.entity.ConditionEntity
 import io.pemassi.heartbeat.entity.TestEntity
-import io.pemassi.heartbeat.global.SpringContext
 import io.pemassi.heartbeat.models.rules.HeartBeatRule
 import io.pemassi.heartbeat.service.AlertService
 import io.pemassi.heartbeat.service.ConditionService
@@ -15,6 +14,7 @@ import io.pemassi.heartbeat.util.YamlParser
 import io.pemassi.kotlin.extensions.slf4j.getLogger
 import org.quartz.*
 import org.springframework.boot.SpringApplication
+import org.springframework.context.ApplicationContext
 import org.springframework.scheduling.quartz.QuartzJobBean
 import java.io.File
 import javax.validation.ConstraintViolationException
@@ -28,6 +28,7 @@ class RuleSyncJob(
     private val conditionService: ConditionService,
     private val alertService: AlertService,
     private val validator: Validator,
+    private val applicationContext: ApplicationContext,
 ) : QuartzJobBean()
 {
     override fun executeInternal(context: JobExecutionContext)
@@ -122,7 +123,7 @@ class RuleSyncJob(
     private fun exitApplication(message: String)
     {
         logger.error(message)
-        exitProcess(SpringApplication.exit(SpringContext.context))
+        exitProcess(SpringApplication.exit(applicationContext))
     }
 
     companion object

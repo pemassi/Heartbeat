@@ -64,7 +64,7 @@ dependencies {
     implementation("io.micrometer:micrometer-registry-prometheus")
 
 	//Helper
-	implementation("com.github.pemassi:pemassi-kotlin-extensions:1.0.4")
+	implementation("com.github.pemassi:pemassi-kotlin-extensions:1.0.5")
 
 	//OkHttp
 	implementation ("com.squareup.okhttp3:okhttp:4.9.1")
