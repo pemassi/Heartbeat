@@ -5,7 +5,9 @@ plugins {
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
 	kotlin("jvm") version "1.5.21"
 	kotlin("plugin.spring") version "1.5.21"
+	kotlin("plugin.jpa") version "1.5.21"
 	kotlin("plugin.serialization") version "1.5.21"
+	kotlin("kapt") version "1.5.21"
 }
 
 group = "io.pemassi"
@@ -42,6 +44,8 @@ dependencies {
     //Database
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("com.h2database:h2")
+	implementation("mysql:mysql-connector-java:8.0.26")
+	implementation("com.oracle.database.jdbc:ojdbc11:21.3.0.0")
 
 	//Kotlin Helper
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -60,18 +64,25 @@ dependencies {
     implementation("io.micrometer:micrometer-registry-prometheus")
 
 	//Helper
-	implementation("com.github.pemassi:pemassi-kotlin-extensions:1.0.4")
+	implementation("com.github.pemassi:pemassi-kotlin-extensions:1.0.5")
 
 	//OkHttp
 	implementation ("com.squareup.okhttp3:okhttp:4.9.1")
 	implementation ("com.squareup.okhttp3:logging-interceptor:4.9.1")
 
 	//Json
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0-RC")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
+
+	//E-mail
+	implementation("com.sun.mail:javax.mail:1.6.2")
 
 	//Yaml
-	//implementation("org.yaml", "snakeyaml", "1.25")
-	implementation("com.charleskorn.kaml:kaml:0.35.3")
+	implementation("com.charleskorn.kaml:kaml:0.36.0")
+
+	// mapstruct
+	implementation("org.mapstruct:mapstruct:1.4.2.Final")
+	kapt("org.mapstruct:mapstruct-processor:1.4.2.Final")
+	kaptTest("org.mapstruct:mapstruct-processor:1.4.2.Final")
 
 	//Unit Test
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {

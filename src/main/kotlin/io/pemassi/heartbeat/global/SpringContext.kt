@@ -23,7 +23,7 @@ object SpringContext: ApplicationContextAware
 
     fun <T : Any> getBean(beanClass: Class<T>): T
     {
-        return context!!.getBean<T>(beanClass)
+        return context!!.getBean(beanClass)
     }
 
     override fun setApplicationContext(context: ApplicationContext)

@@ -2,11 +2,14 @@ package io.pemassi.heartbeat.models.rules.condition.details
 
 import io.pemassi.heartbeat.models.rules.HeartBeatRule
 import io.pemassi.heartbeat.models.rules.condition.ConditionMethod
+import kotlinx.serialization.Serializable
+import org.springframework.context.ApplicationContext
 
-interface ConditionDetail {
-    val method: ConditionMethod
+@Serializable
+sealed class ConditionDetail {
+    abstract val method: ConditionMethod
 
-    fun isMeetCondition(rule: HeartBeatRule): Boolean
+    abstract fun isMeetCondition(rule: HeartBeatRule, context: ApplicationContext): Boolean
 
-    fun validation()
+    abstract fun validation()
 }

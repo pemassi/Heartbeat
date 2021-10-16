@@ -1,14 +1,17 @@
 package io.pemassi.heartbeat.models.rules.alert.details
 
 import io.pemassi.heartbeat.models.rules.alert.AlertMethod
-import io.pemassi.heartbeat.models.rules.test.TestResult
+import io.pemassi.heartbeat.models.rules.test.TestLog
+import kotlinx.serialization.Serializable
+import org.springframework.context.ApplicationContext
 
-interface AlertDetail {
-    val method: AlertMethod
+@Serializable
+sealed class AlertDetail {
+    abstract val method: AlertMethod
 
-    fun reportConditionMet(testResult: TestResult)
+    abstract fun reportConditionMet(testLog: TestLog, context: ApplicationContext)
 
-    fun reportRecovered(testResult: TestResult)
+    abstract fun reportRecovered(testLog: TestLog, context: ApplicationContext)
 
-    fun validation()
+    abstract fun validation()
 }

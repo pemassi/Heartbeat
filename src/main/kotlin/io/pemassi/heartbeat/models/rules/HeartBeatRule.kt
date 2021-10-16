@@ -3,15 +3,18 @@ package io.pemassi.heartbeat.models.rules
 import com.fasterxml.jackson.annotation.JsonIgnore
 import io.pemassi.heartbeat.models.rules.alert.AlertRule
 import io.pemassi.heartbeat.models.rules.condition.ConditionRule
-import io.pemassi.heartbeat.models.rules.test.TestResult
+import io.pemassi.heartbeat.models.rules.test.TestLog
 import io.pemassi.heartbeat.models.rules.test.TestRule
 import kotlinx.serialization.Serializable
 import org.quartz.CronExpression
 import org.quartz.CronScheduleBuilder
+import org.springframework.context.ApplicationContext
+import javax.validation.constraints.NotBlank
 
 @Serializable
 data class HeartBeatRule
 (
+    @NotBlank
     val name: String,
     val description: String = "",
     val cron: String = "0/10 * * ? * *", //Every min
@@ -40,23 +43,23 @@ data class HeartBeatRule
         alert.validation()
     }
 
-    fun performTest(): List<TestResult>
+    fun performTest(context: ApplicationContext): List<TestLog>
     {
-        return test.performTest(this)
+        return test.performTest(this, context)
     }
 
-    fun isMeetCondition(): List<Boolean>
+    fun isMeetCondition(context: ApplicationContext): List<Boolean>
     {
-        return condition.isMeetCondition(this)
+        return condition.isMeetCondition(this, context)
     }
 
-    fun reportConditionMet(testResult: TestResult)
+    fun reportConditionMet(testLog: TestLog, context: ApplicationContext)
     {
-        alert.reportConditionMet(testResult)
+        alert.reportConditionMet(testLog, context)
     }
 
-    fun reportRecovered(testResult: TestResult)
+    fun reportRecovered(testLog: TestLog, context: ApplicationContext)
     {
-        alert.reportRecovered(testResult)
+        alert.reportRecovered(testLog, context)
     }
 }

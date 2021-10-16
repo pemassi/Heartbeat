@@ -1,17 +1,19 @@
 package io.pemassi.heartbeat.models.rules.alert.details
 
-import io.pemassi.heartbeat.interfaces.TelegramAPI
+import io.pemassi.heartbeat.api.TelegramApi
+import io.pemassi.heartbeat.api.dto.telegram.SendMessageDto
 import io.pemassi.heartbeat.models.rules.alert.AlertMethod
-import io.pemassi.heartbeat.models.rules.test.TestResult
-import io.pemassi.heartbeat.util.RestfulClient
+import io.pemassi.heartbeat.models.rules.test.TestLog
 import io.pemassi.kotlin.extensions.slf4j.getLogger
+import io.pemassi.kotlin.extensions.spring.getBean
 import kotlinx.serialization.Serializable
+import org.springframework.context.ApplicationContext
 
 @Serializable
 data class AlertTelegram(
     val botId: String,
     val chatId: Int,
-): AlertDetail
+): AlertDetail()
 {
     override val method: AlertMethod
         get() = AlertMethod.Telegram
@@ -20,21 +22,26 @@ data class AlertTelegram(
 
     }
 
-    override fun reportConditionMet(testResult: TestResult) {
-        report(testResult)
+    override fun reportConditionMet(testLog: TestLog, context: ApplicationContext) {
+        report(testLog, context)
     }
 
-    override fun reportRecovered(testResult: TestResult) {
-        report(testResult)
+    override fun reportRecovered(testLog: TestLog, context: ApplicationContext) {
+        report(testLog, context)
     }
 
-    private fun report(testResult: TestResult)
+    private fun report(testLog: TestLog, context: ApplicationContext)
     {
-        val client = RestfulClient.create(TelegramAPI::class)
+        val telegramApi = context.getBean(TelegramApi::class)
+        val result = telegramApi.send(
+            botId = botId,
+            dto = SendMessageDto(
+                chatId = chatId,
+                text =  testLog.buildAlertTitleAndBody()
+            )
+        )
 
-        val result = client.send(botId, chatId, testResult.buildAlertTitleAndBody()).execute().isSuccessful
-
-        logger.debug("[${testResult.rule.name}] Telegram alert result - $result")
+        logger.debug("[${testLog.rule.name}] Telegram alert result - $result")
     }
 
     companion object
