@@ -24,7 +24,7 @@ data class ConditionPercentage(
 ): ConditionDetail()
 {
     override val method: ConditionMethod
-        get() = ConditionMethod.FailMoreThan
+        get() = ConditionMethod.Percentage
 
     override fun validation() {
         duration.validation()

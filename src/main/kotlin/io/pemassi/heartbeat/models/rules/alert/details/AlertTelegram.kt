@@ -48,5 +48,4 @@ data class AlertTelegram(
     {
         private val logger by getLogger()
     }
-
 }
